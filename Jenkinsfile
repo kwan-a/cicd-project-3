@@ -16,7 +16,3 @@ pipeline {
     }
   }
 }
-
-node {
-  
-}
