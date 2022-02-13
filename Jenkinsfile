@@ -1,7 +1,7 @@
 pipeline {
   agent any
+  def app
   stages {
-    def app
     stage('build') {
       steps {
         echo 'building the application'
