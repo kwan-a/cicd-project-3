@@ -1,9 +1,13 @@
-pipeline {
+pipeline { 
   agent any
   environment {
     DOCKERHUB_CREDENTIALS = credentials('git')
   }
   stages {
+    stage('Initialize'){
+        def dockerHome = tool 'myDocker'
+        env.PATH = "${dockerHome}/bin:${env.PATH}"
+    }
     stage('build') {
       steps {
         echo 'building the application'
