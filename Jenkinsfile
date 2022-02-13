@@ -1,13 +1,16 @@
 pipeline {
   agent any
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('git')
+  }
   stages {
     stage('build') {
-      def app
       steps {
         echo 'building the application'
-        script {
-        docker.build("abkwan/sample-image")
-        }
+        sh 'docker build -t abkwan/sample-image:latest .'
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDNETIALS_USR --password-stdin'
+        sh 'docker push abkwan/sample-image:latest'
+        sh 'docker logout'
       }
     }
     stage('test') {
@@ -17,14 +20,7 @@ pipeline {
     }
     stage('deploy') {
       steps {
-        def app
         echo 'deploying the application'
-        script {
-        docker.withRegistry('https://registry.hub.docker.com', 'git') {            
-          app.push("${env.BUILD_NUMBER}")            
-          app.push("latest") 
-        }
-        }
       }
     }
   }
