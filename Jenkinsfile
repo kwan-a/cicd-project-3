@@ -1,11 +1,13 @@
 pipeline {
   agent any
-  def app
   stages {
     stage('build') {
+      def app
       steps {
         echo 'building the application'
-        app = docker.build("abkwan/sample-image")
+        script {
+        docker.build("abkwan/sample-image")
+        }
       }
     }
     stage('test') {
@@ -15,10 +17,13 @@ pipeline {
     }
     stage('deploy') {
       steps {
+        def app
         echo 'deploying the application'
+        script {
         docker.withRegistry('https://registry.hub.docker.com', 'git') {            
           app.push("${env.BUILD_NUMBER}")            
           app.push("latest") 
+        }
         }
       }
     }
